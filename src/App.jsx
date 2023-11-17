@@ -1,13 +1,15 @@
-import TokenFetchPOC from './components/TokenFetchPOC'
-import './App.css'
+import React from 'react';
+import TokenFetchPOC, { TokenContext } from './components/TokenFetchPOC';
+import './App.css';
+import TicketForm from './components/TicketForm';
 
 function App() {
-
   return (
-    <>
-      < TokenFetchPOC />
-    </>
-  )
+    <TokenFetchPOC>
+      <TicketForm />
+    </TokenFetchPOC>
+  );
 }
 
-export default App
+export { TokenContext };
+export default App;

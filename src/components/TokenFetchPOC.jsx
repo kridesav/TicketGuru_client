@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 
-export default function TokenFetchPOC() {
+export const TokenContext = createContext();
+
+export default function TokenFetchPOC({ children }) {
     const [token, setToken] = useState('');
-    // Korvataan propseilla tai .env muuttujilla
+    const [loading, setLoading] = useState(true);
     const username = "user";
     const password = "user";
 
@@ -11,22 +13,35 @@ export default function TokenFetchPOC() {
     }, []);
 
     const fetchToken = () => {
-        fetch('http://ticketguru-ticketmaster.rahtiapp.fi/api/auth/login', {
+        fetch('https://ticketguru-ticketmaster.rahtiapp.fi/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({password: password, user: username})
+            body: JSON.stringify({ password: password, user: username })
         })
-        .then(response => {
-            if(response.ok) {
-                return response.json();
-            }
-            else {
-                throw new Error("Error in fetch:" + response.statusText);
-            }
-        })
-        .then(data => setToken(data))
-        .catch(err => console.error(err))
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                else {
+                    throw new Error("Error in fetch:" + response.statusText);
+                }
+            })
+            .then(data => {
+                setToken(data.token);
+                setLoading(false);
+            })
+            .catch(err => console.error(err))
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    return (
+        <TokenContext.Provider value={token}>
+            {children}
+        </TokenContext.Provider>
+    );
 }

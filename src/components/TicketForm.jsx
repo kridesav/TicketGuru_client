@@ -29,9 +29,9 @@ export default function TicketForm() {
   const calculateTotalPrice = () => {
     let totalPrice = 0;
     Object.keys(selectedTickets).forEach((eventId) => {
-      const event = events.find((event) => event.id === parseInt(eventId));
-      if (event && event.ticketTypes) {
-        const eventTotalPrice = event.ticketTypes.reduce((acc, ticketType) => {
+      const ticketTypes = eventTicketTypes[eventId];
+      if (ticketTypes) {
+        const eventTotalPrice = ticketTypes.reduce((acc, ticketType) => {
           const quantity = selectedTickets[eventId]?.[ticketType.id] || 0;
           const price = ticketType.price || 0;
   
@@ -40,7 +40,7 @@ export default function TicketForm() {
         totalPrice += eventTotalPrice || 0;
       }
     });
-  console.log(totalPrice)
+    console.log(totalPrice)
     return totalPrice;
   };
 

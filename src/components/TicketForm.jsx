@@ -11,12 +11,12 @@ export default function TicketForm() {
     <div>
       <h1>TicketForm</h1>
       <FetchData url="https://ticketguru-ticketmaster.rahtiapp.fi/api/events" setData={setEvents} token={token}/>
+      <FetchData url="https://ticketguru-ticketmaster.rahtiapp.fi/api/tickettypes" setEventTicketTypes={setEventTicketTypes} token={token}/>
       
       <h2>Events</h2>
       {events.map(event => (
         <div key={event.id}>
           <h3>{event.name}</h3>
-          <FetchData url="https://ticketguru-ticketmaster.rahtiapp.fi/api/events" setData={setEventTicketTypes} token={token} eventId={event.id}/>
           <p>Ticket Types:</p>
           <ul>
             {eventTicketTypes[event.id]?.map(ticketType => (

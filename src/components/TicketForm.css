@@ -1,0 +1,32 @@
+  
+  .event-info {
+    margin-bottom: 1em;
+    padding-left: 20px;
+    width: 100%;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-align: left;
+    background-color: #ffffff;
+    color: black;
+  }
+
+
+  .select {
+    margin-left: 10px;
+    padding: 2px;
+    background-color: #ffffff;
+    color: black;
+    border-radius: 5px;
+  }
+
+  .select-text {
+    margin-left: 5px;
+  }
+  .button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #0e0e0f;
+    color: white;
+    cursor: pointer;
+  }
+  

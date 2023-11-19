@@ -1,13 +1,13 @@
-// FetchPost.jsx
 import React, { useState } from 'react';
+
+
+// This component handles the buying process
 
 const FetchPost = ({ url, data, token, onSuccess, onError }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const handlePost = async () => {
         setIsLoading(true);
-
-
 
         try {
             const response = await fetch(url, {

@@ -13,35 +13,40 @@ export default function TicketForm() {
   const [selectedTickets, setSelectedTickets] = useState({});
 
 
- // Function that updates the selectedTickets 
- const handleTicketChange = (eventId, ticketTypeId, value) => {
-  setSelectedTickets((prev) => ({
-    ...prev,
-    [eventId]: {
-      ...(prev[eventId] || {}),
-      [ticketTypeId]: value,
-    },
-  }));
-};
+  // Function that updates the selectedTickets 
+  const handleTicketChange = (eventId, ticketTypeId, value) => {
+    setSelectedTickets((prev) => ({
+      ...prev,
+      [eventId]: {
+        ...(prev[eventId] || {}),
+        [ticketTypeId]: value,
+      },
+    }));
+  };
 
-// Purchase was ok
-const handlePurchaseSuccess = (responseData) => {
-  console.log('The purchase was successful!', responseData);
-  // tähän oma näkymä että osto meni läpi ja mitä ostettiin !!!!
-};
+  // Purchase was ok
+  const handlePurchaseSuccess = (responseData) => {
+    console.log('The purchase was successful!', responseData);
+    alert('The puchase was successfull.' );
+    return;
+    // tähän oma näkymä että osto meni läpi ja mitä ostettiin !!!!
+    // Tästä uupuu virheen käsittely, meni läpi vaikka lippujen määrä oli nolla kpl *****
+  };
 
-// Error when buying tickets
-const handlePurchaseError = () => {
-  console.error('The purchase failed to process');
-};
+  // Error when buying tickets
+  const handlePurchaseError = () => {
+    console.error('The purchase failed to process');
+    alert('The purchase failed. Please try again');
+    return;
+  };
 
 
   return (
     <div>
       <h1>TicketForm</h1>
-      <FetchData url="https://ticketguru-ticketmaster.rahtiapp.fi/api/events" setData={setEvents} token={token}/>
-      <FetchData url="https://ticketguru-ticketmaster.rahtiapp.fi/api/tickettypes" setEventTicketTypes={setEventTicketTypes} token={token}/>
-      
+      <FetchData url="https://ticketguru-ticketmaster.rahtiapp.fi/api/events" setData={setEvents} token={token} />
+      <FetchData url="https://ticketguru-ticketmaster.rahtiapp.fi/api/tickettypes" setEventTicketTypes={setEventTicketTypes} token={token} />
+
       <h2>Buy tickets to events</h2>
       {events.map(event => (
         <div className="event-info" key={event.id}>
@@ -51,7 +56,7 @@ const handlePurchaseError = () => {
           <ul>
             {eventTicketTypes[event.id]?.map(ticketType => (
               <li key={ticketType.id}>
-                {ticketType.description}: {ticketType.price} €  
+                {ticketType.description}: {ticketType.price} €
                 <select
                   className='select'
                   value={selectedTickets[event.id]?.[ticketType.id] || 0}
@@ -65,32 +70,32 @@ const handlePurchaseError = () => {
                     </option>
                   ))}
                 </select>
-                    <p className='select-text'></p>
+                <p className='select-text'></p>
               </li>
             ))}
           </ul>
         </div>
       ))}
       <div>
-      <OrderSummary selectedTickets={selectedTickets} eventTicketTypes={eventTicketTypes} />
-       <FetchPost
-        url="https://ticketguru-ticketmaster.rahtiapp.fi/api/tickets" 
-        token={token}
-        data={{
-          customerId: 1, // Miten tuo asiakas ID tehdään?
-          ticketsDTO: Object.keys(selectedTickets).reduce((acc, eventId) => {
-            return acc.concat(
-              Object.keys(selectedTickets[eventId]).map((ticketTypeId) => ({
-                eventId: parseInt(eventId),
-                ticketTypeId: parseInt(ticketTypeId),
-                ticketAmount: selectedTickets[eventId][ticketTypeId],
-              }))
-            );
-          }, []),
-        }}
-        onSuccess={handlePurchaseSuccess}
-        onError={handlePurchaseError}
-      />
+        <OrderSummary selectedTickets={selectedTickets} eventTicketTypes={eventTicketTypes} />
+        <FetchPost
+          url="https://ticketguru-ticketmaster.rahtiapp.fi/api/tickets"
+          token={token}
+          data={{
+            customerId: 1, // Miten tuo asiakas ID tehdään?
+            ticketsDTO: Object.keys(selectedTickets).reduce((acc, eventId) => {
+              return acc.concat(
+                Object.keys(selectedTickets[eventId]).map((ticketTypeId) => ({
+                  eventId: parseInt(eventId),
+                  ticketTypeId: parseInt(ticketTypeId),
+                  ticketAmount: selectedTickets[eventId][ticketTypeId],
+                }))
+              );
+            }, []),
+          }}
+          onSuccess={handlePurchaseSuccess}
+          onError={handlePurchaseError}
+        />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import FetchData from "./FetchData";
 import OrderSummary from './OrderSummary';
+import FetchPost from './FetchPost';
 import { TokenContext } from '../App';
 import './TicketForm.css';
 
@@ -23,12 +24,17 @@ export default function TicketForm() {
   }));
 };
 
+// Purchase was ok
+const handlePurchaseSuccess = (responseData) => {
+  console.log('The purchase was successful!', responseData);
+  // tähän oma näkymä että osto meni läpi ja mitä ostettiin !!!!
+};
 
-  const handlePurchase = () => {
-    // Oston toteutus 
-    // Vahvistusviesti käyttäjälle lisätä
-    console.log('Osto tehty!', selectedTickets);
-  };
+// Error when buying tickets
+const handlePurchaseError = () => {
+  console.error('The purchase failed to process');
+};
+
 
   return (
     <div>
@@ -67,7 +73,24 @@ export default function TicketForm() {
       ))}
       <div>
       <OrderSummary selectedTickets={selectedTickets} eventTicketTypes={eventTicketTypes} />
-        <button className="button" onClick={handlePurchase}>Buy tickets</button>
+       <FetchPost
+        url="https://ticketguru-ticketmaster.rahtiapp.fi/api/tickets" 
+        token={token}
+        data={{
+          customerId: 1, // Miten tuo asiakas ID tehdään?
+          ticketsDTO: Object.keys(selectedTickets).reduce((acc, eventId) => {
+            return acc.concat(
+              Object.keys(selectedTickets[eventId]).map((ticketTypeId) => ({
+                eventId: parseInt(eventId),
+                ticketTypeId: parseInt(ticketTypeId),
+                ticketAmount: selectedTickets[eventId][ticketTypeId],
+              }))
+            );
+          }, []),
+        }}
+        onSuccess={handlePurchaseSuccess}
+        onError={handlePurchaseError}
+      />
       </div>
     </div>
   );

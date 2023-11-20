@@ -27,10 +27,10 @@ export default function TicketForm() {
   // Purchase was ok
   const handlePurchaseSuccess = (responseData) => {
     console.log('The purchase was successful!', responseData);
-    alert('The puchase was successfull.');
+    alert('The purchase was successfull.');
+    setSelectedTickets({});
     return;
     // tähän oma näkymä että osto meni läpi ja mitä ostettiin !!!!
-    // Tästä uupuu virheen käsittely, meni läpi vaikka lippujen määrä oli nolla kpl *****
   };
 
   // Error when buying tickets

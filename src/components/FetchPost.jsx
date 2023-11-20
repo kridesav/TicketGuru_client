@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 // This component handles the buying process
 
-const FetchPost = ({ url, data, token, onSuccess, onError }) => {
+const FetchPost = ({ url, data, token, onSuccess, onError, noTicketsSelected  }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const handlePost = async () => {
@@ -35,7 +35,7 @@ const FetchPost = ({ url, data, token, onSuccess, onError }) => {
 
     return (
         <div>
-            <button onClick={handlePost} disabled={isLoading}>
+            <button onClick={handlePost} disabled={isLoading || noTicketsSelected}>
                 {isLoading ? 'Loading...' : 'Buy Tickets'}
             </button>
         </div>

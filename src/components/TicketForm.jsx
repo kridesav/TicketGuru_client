@@ -40,6 +40,9 @@ export default function TicketForm() {
     return;
   };
 
+  const areTicketsSelected = Object.values(selectedTickets).some(event => 
+    Object.values(event).some(quantity => quantity > 0)
+  );
 
   return (
     <div>
@@ -95,6 +98,7 @@ export default function TicketForm() {
           }}
           onSuccess={handlePurchaseSuccess}
           onError={handlePurchaseError}
+          noTicketsSelected={!areTicketsSelected}
         />
       </div>
     </div>

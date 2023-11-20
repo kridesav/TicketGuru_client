@@ -17,12 +17,13 @@ const TicketWindow = ({ tickets }) => {
             <p>Ticket: {ticketData.ticketType.description}</p>
             <p>Code: {ticketData.code}</p>
           </div>
-          <button onClick={() => handleClick(ticketData.id)}>Show QR</button>
+          
           {showQR[ticketData.id] && (
             <div>
               <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${ticketData.code}`} alt={ticketData.event.name} style={{marginTop: '20px'}}/>
             </div>
-          )}
+            )}
+          <button onClick={() => handleClick(ticketData.id)}>Show QR</button>
         </div>
       ))}
     </div>

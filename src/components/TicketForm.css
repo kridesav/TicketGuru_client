@@ -1,13 +1,7 @@
-  
   .event-info {
-    margin-bottom: 1em;
-    padding-left: 20px;
-    width: 100%;
-    padding-top: 2px;
-    padding-bottom: 2px;
+    border-left: #c9c9c9 1px solid;
+    padding: 1em;
     text-align: left;
-    background-color: #ffffff;
-    color: black;
   }
 
 
@@ -22,6 +16,7 @@
   .select-text {
     margin-left: 5px;
   }
+
   .button {
     padding: 10px 20px;
     border-radius: 5px;
@@ -29,4 +24,19 @@
     color: white;
     cursor: pointer;
   }
-  
+
+  .event-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 1em;
+    padding: 1em;
+    background-color: #ffffff;
+    color: black;
+    border-radius: 1%;
+  }
+
+  .ticket-types ul {
+    list-style-type: none;
+    text-align: right;
+  }

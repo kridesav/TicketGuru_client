@@ -27,7 +27,7 @@ export default function TicketForm() {
   // Purchase was ok
   const handlePurchaseSuccess = (responseData) => {
     console.log('The purchase was successful!', responseData);
-    alert('The puchase was successfull.' );
+    alert('The puchase was successfull.');
     return;
     // tähän oma näkymä että osto meni läpi ja mitä ostettiin !!!!
     // Tästä uupuu virheen käsittely, meni läpi vaikka lippujen määrä oli nolla kpl *****
@@ -40,47 +40,53 @@ export default function TicketForm() {
     return;
   };
 
-  const areTicketsSelected = Object.values(selectedTickets).some(event => 
+  const areTicketsSelected = Object.values(selectedTickets).some(event =>
     Object.values(event).some(quantity => quantity > 0)
   );
 
   return (
     <div>
-      <h1>TicketForm</h1>
+      <h1>All events</h1>
       <FetchData url="https://ticketguru-ticketmaster.rahtiapp.fi/api/events" setData={setEvents} token={token} />
       <FetchData url="https://ticketguru-ticketmaster.rahtiapp.fi/api/tickettypes" setEventTicketTypes={setEventTicketTypes} token={token} />
 
       <h2>Buy tickets to events</h2>
-      {events.map(event => (
-        <div className="event-info" key={event.id}>
-          <h4>{event.name}</h4>
-          <p>Date: {new Date(event.eventDate).toLocaleDateString()}</p>
-          <p>Ticket Types:</p>
-          <ul>
-            {eventTicketTypes[event.id]?.map(ticketType => (
-              <li key={ticketType.id}>
-                {ticketType.description}: {ticketType.price} €
-                <select
-                  className='select'
-                  value={selectedTickets[event.id]?.[ticketType.id] || 0}
-                  onChange={(e) =>
-                    handleTicketChange(event.id, ticketType.id, parseInt(e.target.value))
-                  }
-                >
-                  {[...Array(11).keys()].map((quantity) => (
-                    <option key={quantity} value={quantity}>
-                      {quantity}
-                    </option>
-                  ))}
-                </select>
-                <p className='select-text'></p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      <div className='event-container'>
+        {events.map(event => (
+          <div className="event-info" key={event.id}>
+            <div className="event-details">
+              <h4>{event.name}</h4>
+              <p>Date: {new Date(event.eventDate).toLocaleDateString()}</p>
+            </div>
+            <div className="ticket-types">
+              <p>Ticket Types:</p>
+              <ul>
+                {eventTicketTypes[event.id]?.map(ticketType => (
+                  <li key={ticketType.id}>
+                    {ticketType.description}: {ticketType.price} €
+                    <select
+                      className='select'
+                      value={selectedTickets[event.id]?.[ticketType.id] || 0}
+                      onChange={(e) =>
+                        handleTicketChange(event.id, ticketType.id, parseInt(e.target.value))
+                      }
+                    >
+                      {[...Array(11).keys()].map((quantity) => (
+                        <option key={quantity} value={quantity}>
+                          {quantity}
+                        </option>
+                      ))}
+                    </select>
+                    <p className='select-text'></p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
       <div>
-        <OrderSummary selectedTickets={selectedTickets} eventTicketTypes={eventTicketTypes} />
+        <OrderSummary selectedTickets={selectedTickets} eventTicketTypes={eventTicketTypes} events={events} />
         <FetchPost
           url="https://ticketguru-ticketmaster.rahtiapp.fi/api/tickets"
           token={token}

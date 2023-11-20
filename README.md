@@ -1,6 +1,7 @@
 # TicketGuru Client
 
 This is the client for the TicketGuru application. It's built with React and Vite.
+It is designed to run with our backend made in springboot.
 
 ## Dependencies
 

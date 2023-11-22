@@ -13,11 +13,12 @@ function CheckTicket() {
         setScan(true);
     };
 
-    const stopScan = () => {
+    const stopScan = (code) => {
         setScan(false);
+        getTicketInfo(code);
     };
 
-    const getTicketInfo = async () => {
+    const getTicketInfo = async (code) => {
         try {
             const response = await fetch(`https://ticketguru-ticketmaster.rahtiapp.fi/api/tickets/check/${code}`, {
                 headers: {
@@ -114,14 +115,14 @@ function CheckTicket() {
             <Button size="small" onClick={startScan} variant="contained" color="primary" sx={{ margin: 1 }}>
                 Start QR Scanner
             </Button>
-            <Button size="small" onClick={getTicketInfo} variant="contained" color="primary" sx={{ margin: 1 }}>
+            <Button size="small" onClick={() => getTicketInfo(code)} variant="contained" color="primary" sx={{ margin: 1 }}>
                 Get Ticket Info
             </Button>
             <Button size="small" onClick={checkTicket} variant="contained" color="primary" sx={{ margin: 1 }}>
                 Check Ticket
             </Button>
-            {scan && <QRScanner onScan={(ticketcode) => { setCode(ticketcode); stopScan(); }} />}
-        </div>
+            {scan && <QRScanner onScan={(ticketcode) => { setCode(ticketcode); stopScan(ticketcode); }} />}
+        </div >
     );
 }
 

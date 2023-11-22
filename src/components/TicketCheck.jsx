@@ -7,7 +7,7 @@ function CheckTicket() {
     const [code, setCode] = useState('');
     const [ticketInfo, setTicketInfo] = useState(null);
     const [scan, setScan] = useState(false);
-    const token = useContext(TokenContext);
+    const { token } = useContext(TokenContext);
 
     const startScan = () => {
         setScan(true);

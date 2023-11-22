@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { TokenContext } from "../App";
 import { TextField, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
 function CreateEvent() {
-    const token = React.useContext(TokenContext);
+    const { token } = useContext(TokenContext);
     const [eventId, setEventId] = useState(null);
     const [open, setOpen] = useState(false);
     const [event, setEvent] = React.useState({

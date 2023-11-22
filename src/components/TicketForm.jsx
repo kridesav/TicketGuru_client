@@ -9,7 +9,7 @@ import './TicketForm.css';
 
 
 export default function TicketForm() {
-  const token = useContext(TokenContext);
+  const { token } = useContext(TokenContext);
   const [events, setEvents] = useState([]);
   const [eventTicketTypes, setEventTicketTypes] = useState({});
   const [selectedTickets, setSelectedTickets] = useState({});
@@ -58,7 +58,7 @@ export default function TicketForm() {
         <FetchData url="https://ticketguru-ticketmaster.rahtiapp.fi/api/events" setData={setEvents} token={token} />
         <FetchData url="https://ticketguru-ticketmaster.rahtiapp.fi/api/tickettypes" setEventTicketTypes={setEventTicketTypes} token={token} />
 
-        <Grid container spacing={17}>
+        <Grid container spacing={13}>
           <Grid item xs={12} md={8}>
             <List className='eventsList'>
               {events.map(event => (
@@ -66,7 +66,9 @@ export default function TicketForm() {
                   <ListItemButton onClick={() => handleEventClick(event.id)}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%'}}>
                       <Typography variant="h4">{event.name}</Typography>
-                      <Typography variant="body1">Date: {new Date(event.eventDate).toLocaleDateString()}</Typography>
+                      <Typography variant="body1">{new Date(event.eventDate).toLocaleDateString()}</Typography>
+                      <Typography variant="body1">{event.place}</Typography>
+                      <Typography variant="body1">Tickets left: {event.ticketAmount}</Typography>
                     </Box>
                   </ListItemButton>
                   <Collapse in={selectedEventId === event.id}>

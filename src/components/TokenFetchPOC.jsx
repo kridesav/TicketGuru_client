@@ -5,8 +5,8 @@ export const TokenContext = createContext();
 export default function TokenFetchPOC({ children }) {
     const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
-    const username = "user";
-    const password = "user";
+    const username = "admin";
+    const password = "admin";
 
     useEffect(() => {
         fetchToken();

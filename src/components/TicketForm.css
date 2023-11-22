@@ -1,16 +1,9 @@
-  .event-info {
-    border-left: #c9c9c9 1px solid;
-    padding: 1em;
-    text-align: left;
-  }
-
 
   .select {
     margin-left: 10px;
-    padding: 2px;
     background-color: #ffffff;
     color: black;
-    border-radius: 5px;
+    border-radius: 1px;
   }
 
   .select-text {
@@ -25,18 +18,9 @@
     cursor: pointer;
   }
 
-  .event-container {
+  .eventsList {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-bottom: 1em;
-    padding: 1em;
-    background-color: #ffffff;
-    color: black;
-    border-radius: 1%;
+    flex-direction: column;
+    
   }
-
-  .ticket-types ul {
-    list-style-type: none;
-    text-align: right;
-  }
+  

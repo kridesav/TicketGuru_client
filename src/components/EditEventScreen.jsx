@@ -24,8 +24,7 @@ export default function ControlPanel() {
     // Mitä vielä pitää tehdä:
     // - Päivittää sivu muutosten jälkeen (nyt ei päivity suoraan)
     // - Lisätä muutosmahdollisuus lipputyypeille (tapahtuman muutokseen ei ole lipputyyppejä vielä viety)
-    // - Näyttää jokaisen tapahtuman transactionit (tämän voisi lisätä Collapsible table tyylillä)
-    // - Myymättömien lippujen näkymä ja mahdollisuus tulostaa ne
+ 
 
     return (
         <div>

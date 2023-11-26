@@ -6,6 +6,7 @@ import TicketForm from './components/TicketForm';
 import CreateEvent from './components/CreateEvent';
 import CheckTicket from './components/TicketCheck';
 import ControlPanel from './components/ControlPanel';
+import EditEventScreen from './components/EditEventScreen'
 
 function App() {
   const { logout, role } = useContext(TokenContext);
@@ -14,6 +15,7 @@ function App() {
   const tabs = [
     { label: "Sell Tickets", roles: ["user", "admin"], component: TicketForm },
     { label: "New event", roles: ["admin"], component: CreateEvent },
+    { label: "Edit event", roles: ["admin"], component:  EditEventScreen},
     { label: "Check Ticket", roles: ["admin", "scanner", "user"], component: CheckTicket },
     { label: "Control Panel", roles: ["admin"], component: ControlPanel },
     { label: "Logout", roles: ["user", "admin", "scanner"] }

@@ -17,7 +17,7 @@ import {
 import { TokenContext } from "../App";
 
 // Function that handles editing event
-function EditEvent({ eventToEdit, onClose, eventTicketTypes }) {
+export default function EditEvent({ eventToEdit, onClose, eventTicketTypes }) {
 
     const { token } = useContext(TokenContext);
     const [eventId, setEventId] = useState(null);
@@ -84,6 +84,12 @@ function EditEvent({ eventToEdit, onClose, eventTicketTypes }) {
             .then((data) => {
                 console.log(data);
                 setOpen(true);
+                setTicketType({
+                    description: "",
+                    price: "",
+                })
+                onClose(true);
+
             });
     }
 
@@ -95,6 +101,8 @@ function EditEvent({ eventToEdit, onClose, eventTicketTypes }) {
                     Please update the information below.
                 </DialogContentText>
                 <Container>
+
+                    {/* Event Form */}
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
@@ -159,6 +167,8 @@ function EditEvent({ eventToEdit, onClose, eventTicketTypes }) {
                             </Grid>
                         </Grid>
                     </form>
+
+                    {/* Ticket Types List */}
                     <Divider sx={{ borderBottomWidth: '5px' }} />
                     <List>
                         <ListItemText>TicketTypes for this event:</ListItemText>
@@ -172,6 +182,7 @@ function EditEvent({ eventToEdit, onClose, eventTicketTypes }) {
                         ))}
                     </List>
 
+                    {/* Add new ticket type */}
                     <Divider sx={{ borderBottomWidth: '5px' }} />
                     <ListItemText style={{ marginTop: 20, marginBottom: 25 }}>Add New TicketTypes to this event</ListItemText>
                     <form onSubmit={handleTicketTypeSubmit}>
@@ -206,6 +217,8 @@ function EditEvent({ eventToEdit, onClose, eventTicketTypes }) {
                     </form>
                 </Container>
             </DialogContent>
+            
+            {/* Cancel button */}
             <DialogActions>
                 <Button onClick={onClose} color="primary">
                     Cancel
@@ -215,4 +228,3 @@ function EditEvent({ eventToEdit, onClose, eventTicketTypes }) {
     );
 }
 
-export default EditEvent;

@@ -37,19 +37,20 @@ export default function ControlPanel() {
                     {events.map(event => {
                             const eventDate = new Date(event.eventDate);
                             const currentDate = new Date();
+                            const isPastEvent = eventDate < currentDate;
 
                             return (
-                                <TableRow key={event.id}>
+                                <TableRow key={event.id} style={{ background: isPastEvent ? '#f2f2f2' : 'inherit' }}>
                                     <TableCell>{event.name}</TableCell>
                                     <TableCell>{eventDate.toLocaleDateString()}</TableCell>
                                     <TableCell>
-                                        {eventDate < currentDate
+                                        {isPastEvent
                                             ? 'Past Event'
                                             : 'In the Future'}
                                     </TableCell>
                                     <TableCell>XXX</TableCell>
                                     <TableCell>{event.ticketAmount}</TableCell>
-                                    <TableCell><Button>Print</Button></TableCell>
+                                    <TableCell><Button disabled={isPastEvent}>Print</Button></TableCell>
                                 </TableRow>
                             );
                         })}

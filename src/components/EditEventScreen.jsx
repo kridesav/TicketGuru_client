@@ -34,6 +34,7 @@ export default function ControlPanel() {
 
 
 
+
     // Mitä vielä pitää tehdä:
     // - Päivittää sivu muutosten jälkeen (nyt ei päivity suoraan)
     // - Lisätä muutosmahdollisuus lipputyypeille (tapahtuman muutokseen ei ole lipputyyppejä vielä viety)

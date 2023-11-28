@@ -27,17 +27,32 @@ export default function ControlPanel() {
                         <TableRow>
                             <TableCell>Event</TableCell>
                             <TableCell>Date</TableCell>
+                            <TableCell>Past/Future</TableCell>
+                            <TableCell>Tickets sold</TableCell>
                             <TableCell>Tickets left</TableCell>
+                            <TableCell>Print left tickets</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {events.map(event => (
-                            <TableRow key={event.id}>
-                                <TableCell>{event.name}</TableCell>
-                                <TableCell>{new Date(event.eventDate).toLocaleDateString()}</TableCell>
-                                <TableCell>{event.ticketAmount}</TableCell>
-                            </TableRow>
-                        ))}
+                    {events.map(event => {
+                            const eventDate = new Date(event.eventDate);
+                            const currentDate = new Date();
+
+                            return (
+                                <TableRow key={event.id}>
+                                    <TableCell>{event.name}</TableCell>
+                                    <TableCell>{eventDate.toLocaleDateString()}</TableCell>
+                                    <TableCell>
+                                        {eventDate < currentDate
+                                            ? 'Past Event'
+                                            : 'In the Future'}
+                                    </TableCell>
+                                    <TableCell>XXX</TableCell>
+                                    <TableCell>{event.ticketAmount}</TableCell>
+                                    <TableCell><Button>Print</Button></TableCell>
+                                </TableRow>
+                            );
+                        })}
                     </TableBody>
                 </Table>
             </TableContainer>

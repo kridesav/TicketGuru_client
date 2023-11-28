@@ -10,7 +10,7 @@ import EditEvent from './EditEvent';
 
 // EDIT EVENT TAB PAGE
 
-export default function ControlPanel() {
+export default function EditEventScreen() {
     const { token } = useContext(TokenContext);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [events, setEvents] = useState([]);

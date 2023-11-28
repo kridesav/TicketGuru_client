@@ -98,7 +98,7 @@ export default function ControlPanel() {
                                         <TableCell>{event.ticketAmount}</TableCell>
                                         <TableCell><Button disabled={isPastEvent} onClick={handlePrintButtonClick}>Print</Button></TableCell>
                                     </TableRow>
-                                    <TableRow style={{ background: '#E6f3f9' }}>
+                                    <TableRow style={{ background: '#F7FAFC' }}>
                                         <TableCell colSpan={7} style={{ paddingBottom: 0, paddingTop: 0 }}>
                                             <Collapse
                                                 in={selectedEvent === event}

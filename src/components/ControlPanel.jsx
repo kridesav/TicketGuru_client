@@ -11,10 +11,20 @@ export default function ControlPanel() {
     const [eventTicketTypes, setEventTicketTypes] = useState({});
 
 
-
     // ***** Mitä vielä pitää tehdä:*****
     // - Näyttää jokaisen tapahtuman transactionit (tämän voisi lisätä Collapsible table tyylillä)
     // - Myymättömien lippujen näkymä ja mahdollisuus tulostaa ne
+
+    // Alert for printing unsold tickets. Now not printing them
+    const handlePrintButtonClick = () => {
+        const confirmation = window.confirm("Do you want to print all unsold tickets for this event?");
+        
+        if (confirmation) {
+            console.log("Printing unsold tickets...");
+        } else {
+            console.log("Printing canceled.");
+        }
+    };
 
     return (
         <div>
@@ -50,7 +60,7 @@ export default function ControlPanel() {
                                     </TableCell>
                                     <TableCell>XXX</TableCell>
                                     <TableCell>{event.ticketAmount}</TableCell>
-                                    <TableCell><Button disabled={isPastEvent}>Print</Button></TableCell>
+                                    <TableCell><Button disabled={isPastEvent} onClick={handlePrintButtonClick}>Print</Button></TableCell>
                                 </TableRow>
                             );
                         })}

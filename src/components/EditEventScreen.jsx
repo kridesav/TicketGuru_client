@@ -87,7 +87,8 @@ export default function EditEventScreen() {
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
-                        <TableRow>
+                        <TableRow style={{ background: '#509bb7' }}>
+                        <TableCell></TableCell>
                             <TableCell>Event</TableCell>
                             <TableCell>Date</TableCell>
                             <TableCell>Place</TableCell>
@@ -112,8 +113,9 @@ export default function EditEventScreen() {
                                                 }}
                                             />
                                         </IconButton>
-                                        {event.name}
+                                       
                                     </TableCell>
+                                    <TableCell> {event.name}</TableCell>
                                     <TableCell>
                                         {new Date(event.eventDate).toLocaleDateString()}
                                     </TableCell>
@@ -128,8 +130,8 @@ export default function EditEventScreen() {
                                 </TableRow>
 
                                 {/* Ticket Types Collapse section */}
-                                <TableRow>
-                                    <TableCell colSpan={5} style={{ paddingBottom: 0, paddingTop: 0 }}>
+                                <TableRow style={{ background: '#F7FAFC' }}>
+                                    <TableCell colSpan={6} style={{ paddingBottom: 0, paddingTop: 0 }}>
                                         <Collapse
                                             in={selectedEvent === event}
                                             timeout="auto"
@@ -138,8 +140,10 @@ export default function EditEventScreen() {
                                             <Table>
                                                 <TableHead>
                                                     <TableRow>
-                                                        <TableCell>Description</TableCell>
+                                                    <TableCell></TableCell>
+                                                        <TableCell>Ticket Types</TableCell>
                                                         <TableCell>Price</TableCell>
+                                                        <TableCell></TableCell>
                                                     </TableRow>
                                                 </TableHead>
 
@@ -147,8 +151,10 @@ export default function EditEventScreen() {
                                                 <TableBody>
                                                     {eventTicketTypes[event.id]?.map((ticketType) => (
                                                         <TableRow key={ticketType.id}>
+                                                            <TableCell></TableCell>
                                                             <TableCell>{ticketType.description}</TableCell>
                                                             <TableCell>{ticketType.price} €</TableCell>
+                                                            <TableCell></TableCell>
                                                         </TableRow>
                                                     ))}
                                                 </TableBody>

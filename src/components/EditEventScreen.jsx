@@ -9,15 +9,13 @@ import EditEvent from './EditEvent';
 
 
 // EDIT EVENT TAB PAGE
-
 export default function EditEventScreen() {
     const { token } = useContext(TokenContext);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [events, setEvents] = useState([]);
     const [eventTicketTypes, setEventTicketTypes] = useState({});
     const [editModalOpen, setEditModalOpen] = useState(false);
-
-
+    const [shouldFetchData, setShouldFetchData] = useState(false);
 
     // Handle collabse function
     const handleToggleCollapse = (event) => {
@@ -32,11 +30,47 @@ export default function EditEventScreen() {
         setEditModalOpen(true);
     };
 
+    const updateData = () => {
+        setShouldFetchData(true);
+    };
 
+    useEffect(() => {
+        if (shouldFetchData) {
+            const urls = [
+                "https://ticketguru-ticketmaster.rahtiapp.fi/api/events",
+                "https://ticketguru-ticketmaster.rahtiapp.fi/api/tickettypes"
+            ];
 
+            urls.forEach(url => {
+                fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (url.endsWith('tickettypes')) {
+                            const ticketTypesByEvent = data.reduce((acc, ticketType) => {
+                                const eventId = ticketType.event.id;
+                                if (!acc[eventId]) {
+                                    acc[eventId] = [];
+                                }
+                                acc[eventId].push(ticketType);
+                                return acc;
+                            }, {});
+                            setEventTicketTypes(ticketTypesByEvent);
+                        } else {
+                            setEvents(data);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+
+            setShouldFetchData(false);
+        }
+    }, [shouldFetchData, setEvents, setEventTicketTypes, token]);
 
     // Mitä vielä pitää tehdä:
-    // - Päivittää sivu muutosten jälkeen (nyt ei päivity suoraan)
     // - Lisätä muutosmahdollisuus lipputyypeille (tapahtuman muutokseen ei ole lipputyyppejä vielä viety)
 
 
@@ -108,7 +142,7 @@ export default function EditEventScreen() {
                                                         <TableCell>Price</TableCell>
                                                     </TableRow>
                                                 </TableHead>
-                                                
+
                                                 {/* Ticket Types information */}
                                                 <TableBody>
                                                     {eventTicketTypes[event.id]?.map((ticketType) => (
@@ -132,7 +166,10 @@ export default function EditEventScreen() {
             {editModalOpen && (
                 <EditEvent
                     eventToEdit={selectedEvent}
-                    onClose={() => setEditModalOpen(false)}
+                    onClose={() => {
+                        setEditModalOpen(false);
+                        updateData();
+                    }}
                     eventTicketTypes={eventTicketTypes[selectedEvent.id]}
                 />
             )}

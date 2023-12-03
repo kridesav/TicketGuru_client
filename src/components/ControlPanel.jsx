@@ -94,7 +94,7 @@ export default function ControlPanel() {
                                                 ? 'Past Event'
                                                 : ''}
                                         </TableCell>
-                                        <TableCell>XXX</TableCell>
+                                        <TableCell>{event.ticketsSold}</TableCell>
                                         <TableCell>{event.ticketAmount}</TableCell>
                                         <TableCell><Button disabled={isPastEvent} onClick={handlePrintButtonClick}>Print</Button></TableCell>
                                     </TableRow>

@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { TokenContext } from '../App';
 import EditEvent from './EditEvent';
+import EditTicketTypeModal from './EditTicketTypeModal';
 
 
 // EDIT EVENT TAB PAGE
@@ -17,11 +18,21 @@ export default function EditEventScreen() {
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [shouldFetchData, setShouldFetchData] = useState(false);
 
+    // Edit TicketType
+    const [editTicketTypeModalOpen, setEditTicketTypeModalOpen] = useState(false);
+    const [selectedTicketType, setSelectedTicketType] = useState(null);
+
+
     // Handle collabse function
     const handleToggleCollapse = (event) => {
         setSelectedEvent((prevSelectedEvent) =>
             prevSelectedEvent === event ? null : event
         );
+    };
+    // Handle edit ticket type
+    const handleEditTicketType = (ticketType) => {
+        setSelectedTicketType(ticketType);
+        setEditTicketTypeModalOpen(true);
     };
 
     // Edit event main info
@@ -70,8 +81,6 @@ export default function EditEventScreen() {
         }
     }, [shouldFetchData, setEvents, setEventTicketTypes, token]);
 
-    // Mitä vielä pitää tehdä:
-    // - Lisätä muutosmahdollisuus lipputyypeille (tapahtuman muutokseen ei ole lipputyyppejä vielä viety)
 
 
     return (
@@ -88,7 +97,7 @@ export default function EditEventScreen() {
                 <Table>
                     <TableHead>
                         <TableRow style={{ background: '#509bb7' }}>
-                        <TableCell></TableCell>
+                            <TableCell></TableCell>
                             <TableCell>Event</TableCell>
                             <TableCell>Date</TableCell>
                             <TableCell>Place</TableCell>
@@ -113,7 +122,7 @@ export default function EditEventScreen() {
                                                 }}
                                             />
                                         </IconButton>
-                                       
+
                                     </TableCell>
                                     <TableCell> {event.name}</TableCell>
                                     <TableCell>
@@ -140,10 +149,10 @@ export default function EditEventScreen() {
                                             <Table>
                                                 <TableHead>
                                                     <TableRow>
-                                                    <TableCell></TableCell>
+                                                        <TableCell></TableCell>
                                                         <TableCell>Ticket Types</TableCell>
                                                         <TableCell>Price</TableCell>
-                                                        <TableCell></TableCell>
+                                                        <TableCell>Edit</TableCell>
                                                     </TableRow>
                                                 </TableHead>
 
@@ -154,7 +163,9 @@ export default function EditEventScreen() {
                                                             <TableCell></TableCell>
                                                             <TableCell>{ticketType.description}</TableCell>
                                                             <TableCell>{ticketType.price} €</TableCell>
-                                                            <TableCell></TableCell>
+                                                            <TableCell><Button onClick={() => handleEditTicketType(ticketType)}>
+                                                                <EditIcon />
+                                                            </Button></TableCell>
                                                         </TableRow>
                                                     ))}
                                                 </TableBody>
@@ -177,6 +188,15 @@ export default function EditEventScreen() {
                         updateData();
                     }}
                     eventTicketTypes={eventTicketTypes[selectedEvent.id]}
+                />
+            )}
+            {editTicketTypeModalOpen && (
+                <EditTicketTypeModal
+                    ticketTypetoEdit={selectedTicketType}
+                    onClose={() => {
+                        setEditTicketTypeModalOpen(false);
+                        updateData();
+                    }}
                 />
             )}
         </div>

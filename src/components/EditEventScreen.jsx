@@ -6,17 +6,21 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { TokenContext } from '../App';
 import EditEvent from './EditEvent';
+import EditTicketTypeModal from './EditTicketTypeModal';
 
 
 // EDIT EVENT TAB PAGE
-
-export default function ControlPanel() {
+export default function EditEventScreen() {
     const { token } = useContext(TokenContext);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [events, setEvents] = useState([]);
     const [eventTicketTypes, setEventTicketTypes] = useState({});
     const [editModalOpen, setEditModalOpen] = useState(false);
+    const [shouldFetchData, setShouldFetchData] = useState(false);
 
+    // Edit TicketType
+    const [editTicketTypeModalOpen, setEditTicketTypeModalOpen] = useState(false);
+    const [selectedTicketType, setSelectedTicketType] = useState(null);
 
 
     // Handle collabse function
@@ -25,6 +29,11 @@ export default function ControlPanel() {
             prevSelectedEvent === event ? null : event
         );
     };
+    // Handle edit ticket type
+    const handleEditTicketType = (ticketType) => {
+        setSelectedTicketType(ticketType);
+        setEditTicketTypeModalOpen(true);
+    };
 
     // Edit event main info
     const handleEditEvent = (event) => {
@@ -32,12 +41,46 @@ export default function ControlPanel() {
         setEditModalOpen(true);
     };
 
+    const updateData = () => {
+        setShouldFetchData(true);
+    };
 
+    useEffect(() => {
+        if (shouldFetchData) {
+            const urls = [
+                "https://ticketguru-ticketmaster.rahtiapp.fi/api/events",
+                "https://ticketguru-ticketmaster.rahtiapp.fi/api/tickettypes"
+            ];
 
+            urls.forEach(url => {
+                fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (url.endsWith('tickettypes')) {
+                            const ticketTypesByEvent = data.reduce((acc, ticketType) => {
+                                const eventId = ticketType.event.id;
+                                if (!acc[eventId]) {
+                                    acc[eventId] = [];
+                                }
+                                acc[eventId].push(ticketType);
+                                return acc;
+                            }, {});
+                            setEventTicketTypes(ticketTypesByEvent);
+                        } else {
+                            setEvents(data);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
 
-    // Mitä vielä pitää tehdä:
-    // - Päivittää sivu muutosten jälkeen (nyt ei päivity suoraan)
-    // - Lisätä muutosmahdollisuus lipputyypeille (tapahtuman muutokseen ei ole lipputyyppejä vielä viety)
+            setShouldFetchData(false);
+        }
+    }, [shouldFetchData, setEvents, setEventTicketTypes, token]);
+
 
 
     return (
@@ -53,7 +96,8 @@ export default function ControlPanel() {
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
-                        <TableRow>
+                        <TableRow style={{ background: '#509bb7' }}>
+                            <TableCell></TableCell>
                             <TableCell>Event</TableCell>
                             <TableCell>Date</TableCell>
                             <TableCell>Place</TableCell>
@@ -78,8 +122,9 @@ export default function ControlPanel() {
                                                 }}
                                             />
                                         </IconButton>
-                                        {event.name}
+
                                     </TableCell>
+                                    <TableCell> {event.name}</TableCell>
                                     <TableCell>
                                         {new Date(event.eventDate).toLocaleDateString()}
                                     </TableCell>
@@ -94,8 +139,8 @@ export default function ControlPanel() {
                                 </TableRow>
 
                                 {/* Ticket Types Collapse section */}
-                                <TableRow>
-                                    <TableCell colSpan={5} style={{ paddingBottom: 0, paddingTop: 0 }}>
+                                <TableRow style={{ background: '#F7FAFC' }}>
+                                    <TableCell colSpan={6} style={{ paddingBottom: 0, paddingTop: 0 }}>
                                         <Collapse
                                             in={selectedEvent === event}
                                             timeout="auto"
@@ -104,17 +149,23 @@ export default function ControlPanel() {
                                             <Table>
                                                 <TableHead>
                                                     <TableRow>
-                                                        <TableCell>Description</TableCell>
+                                                        <TableCell></TableCell>
+                                                        <TableCell>Ticket Types</TableCell>
                                                         <TableCell>Price</TableCell>
+                                                        <TableCell>Edit</TableCell>
                                                     </TableRow>
                                                 </TableHead>
-                                                
+
                                                 {/* Ticket Types information */}
                                                 <TableBody>
                                                     {eventTicketTypes[event.id]?.map((ticketType) => (
                                                         <TableRow key={ticketType.id}>
+                                                            <TableCell></TableCell>
                                                             <TableCell>{ticketType.description}</TableCell>
                                                             <TableCell>{ticketType.price} €</TableCell>
+                                                            <TableCell><Button onClick={() => handleEditTicketType(ticketType)}>
+                                                                <EditIcon />
+                                                            </Button></TableCell>
                                                         </TableRow>
                                                     ))}
                                                 </TableBody>
@@ -132,8 +183,20 @@ export default function ControlPanel() {
             {editModalOpen && (
                 <EditEvent
                     eventToEdit={selectedEvent}
-                    onClose={() => setEditModalOpen(false)}
+                    onClose={() => {
+                        setEditModalOpen(false);
+                        updateData();
+                    }}
                     eventTicketTypes={eventTicketTypes[selectedEvent.id]}
+                />
+            )}
+            {editTicketTypeModalOpen && (
+                <EditTicketTypeModal
+                    ticketTypetoEdit={selectedTicketType}
+                    onClose={() => {
+                        setEditTicketTypeModalOpen(false);
+                        updateData();
+                    }}
                 />
             )}
         </div>

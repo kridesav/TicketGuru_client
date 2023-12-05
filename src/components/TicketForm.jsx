@@ -72,6 +72,8 @@ export default function TicketForm() {
                     </Box>
                   </ListItemButton>
                   <Collapse in={selectedEventId === event.id}>
+                  {eventTicketTypes[event.id] && eventTicketTypes[event.id].length > 0 ? (
+
                     <List>
                       {eventTicketTypes[event.id]?.map(ticketType => (
                         <ListItem key={ticketType.id}>
@@ -102,6 +104,9 @@ export default function TicketForm() {
                       </ListItem>
                       ))}
                     </List>
+                    ) : (
+                      <Typography style={{color:"red", display: 'flex', justifyContent: 'flex-start', paddingLeft:15}}>No ticket types added for this event.</Typography>
+                  )}
                   </Collapse>
                 </div>
               ))}

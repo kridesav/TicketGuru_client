@@ -141,36 +141,43 @@ export default function EditEventScreen() {
                                 {/* Ticket Types Collapse section */}
                                 <TableRow style={{ background: '#F7FAFC' }}>
                                     <TableCell colSpan={6} style={{ paddingBottom: 0, paddingTop: 0 }}>
+
                                         <Collapse
                                             in={selectedEvent === event}
                                             timeout="auto"
                                             unmountOnExit
                                         >
-                                            <Table>
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <TableCell></TableCell>
-                                                        <TableCell>Ticket Types</TableCell>
-                                                        <TableCell>Price</TableCell>
-                                                        <TableCell>Edit</TableCell>
-                                                    </TableRow>
-                                                </TableHead>
+                                            {eventTicketTypes[event.id] && eventTicketTypes[event.id].length > 0 ? (
 
-                                                {/* Ticket Types information */}
-                                                <TableBody>
-                                                    {eventTicketTypes[event.id]?.map((ticketType) => (
-                                                        <TableRow key={ticketType.id}>
+                                                <Table>
+                                                    <TableHead>
+                                                        <TableRow>
                                                             <TableCell></TableCell>
-                                                            <TableCell>{ticketType.description}</TableCell>
-                                                            <TableCell>{ticketType.price} €</TableCell>
-                                                            <TableCell><Button onClick={() => handleEditTicketType(ticketType)}>
-                                                                <EditIcon />
-                                                            </Button></TableCell>
+                                                            <TableCell>Ticket Types</TableCell>
+                                                            <TableCell>Price</TableCell>
+                                                            <TableCell>Edit</TableCell>
                                                         </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                            </Table>
+                                                    </TableHead>
+
+                                                    {/* Ticket Types information */}
+                                                    <TableBody>
+                                                        {eventTicketTypes[event.id]?.map((ticketType) => (
+                                                            <TableRow key={ticketType.id}>
+                                                                <TableCell></TableCell>
+                                                                <TableCell>{ticketType.description}</TableCell>
+                                                                <TableCell>{ticketType.price} €</TableCell>
+                                                                <TableCell><Button onClick={() => handleEditTicketType(ticketType)}>
+                                                                    <EditIcon />
+                                                                </Button></TableCell>
+                                                            </TableRow>
+                                                        ))}
+                                                    </TableBody>
+                                                </Table>
+                                            ) : (
+                                                <p>No ticket types added for this event.</p>
+                                            )}
                                         </Collapse>
+
                                     </TableCell>
                                 </TableRow>
                             </React.Fragment>

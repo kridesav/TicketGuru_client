@@ -11,6 +11,12 @@ import {
     Paper,
     Collapse,
     IconButton,
+    CircularProgress,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    createTheme,
+    ThemeProvider,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import EditIcon from '@mui/icons-material/Edit';
@@ -24,10 +30,12 @@ export default function ControlPanel() {
     const [events, setEvents] = useState([]);
     const [eventTicketTypes, setEventTicketTypes] = useState({});
     const [selectedEvent, setSelectedEvent] = useState(null);
-
+    const [tickets, setTickets] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [selectedTicket, setSelectedTicket] = useState(null);
 
     // ***** Mitä vielä pitää tehdä:*****
-    // - Näyttää jokaisen tapahtuman transactionit (tämän voisi lisätä Collapsible table tyylillä)
     // - Myymättömien lippujen näkymä ja mahdollisuus tulostaa ne
 
     // Alert for printing unsold tickets. Now not printing them
@@ -40,11 +48,47 @@ export default function ControlPanel() {
             console.log("Printing canceled.");
         }
     };
+
+    const theme = createTheme({
+        components: {
+            MuiDialog: {
+                styleOverrides: {
+                    paper: {
+                        boxShadow: '0px 2px 30px -5px rgba(0, 0, 0, 0.3)', // Shadow for dialog
+                    },
+                },
+            },
+            MuiBackdrop: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: 'transparent', // Make backdrop transparent
+                    },
+                },
+            },
+        },
+    });
+
     // Handle collabse function
     const handleToggleCollapse = (event) => {
-        setSelectedEvent((prevSelectedEvent) =>
-            prevSelectedEvent === event ? null : event
-        );
+        if (selectedEvent === event) {
+            setSelectedEvent(null); // if the selected event is already open, close it
+        } else {
+            setSelectedEvent(event); // open the selected event
+            setLoading(true);
+            fetch(`https://ticketguru-ticketmaster.rahtiapp.fi/api/events/${event.id}/tickets`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setTickets(data);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
     };
 
     return (
@@ -62,7 +106,7 @@ export default function ControlPanel() {
                             <TableCell>Past events</TableCell>
                             <TableCell>Tickets sold</TableCell>
                             <TableCell>Tickets left</TableCell>
-                            <TableCell>Print left tickets</TableCell>
+                            <TableCell>Print unsold tickets</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -78,6 +122,7 @@ export default function ControlPanel() {
                                         <TableCell>
                                             <IconButton
                                                 onClick={() => handleToggleCollapse(event)}
+                                                sx={{ '&:focus': { outline: 'none' } }}
                                             >
                                                 <KeyboardArrowDownIcon
                                                     style={{
@@ -105,29 +150,54 @@ export default function ControlPanel() {
                                                 timeout="auto"
                                                 unmountOnExit
                                             >
-                                                <Table>
-                                                    <TableHead>
-                                                        <TableRow>
-                                                            <TableCell>TicketType</TableCell>
-                                                            <TableCell>Price</TableCell>
-                                                            <TableCell>Selling date</TableCell>
-                                                            <TableCell>Amount</TableCell>
-                                                            <TableCell>Ticket Checked</TableCell>
-                                                        </TableRow>
-                                                    </TableHead>
-                                                    <TableBody>
-                                                        <TableRow>
-                                                            <TableCell>TicketType</TableCell>
-                                                            <TableCell>Price</TableCell>
-                                                            <TableCell>Date</TableCell>
-                                                            <TableCell>Amount</TableCell>
-                                                            <TableCell>Ticket Checked</TableCell>
-                                                        </TableRow>
-                                                    </TableBody>
-                                                </Table>
+                                                {loading ? (
+                                                    <CircularProgress />
+                                                ) : (
+                                                    <Table>
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <TableCell>Description</TableCell>
+                                                                <TableCell>Price</TableCell>
+                                                                <TableCell>Date bought</TableCell>
+                                                                <TableCell>Price</TableCell>
+                                                                <TableCell>Checked</TableCell>
+                                                                <TableCell>Show code</TableCell>
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {tickets.map((ticket) => (
+                                                                <TableRow key={ticket.id}>
+                                                                    <TableCell>{ticket.ticketType.description}</TableCell>
+                                                                    <TableCell>{ticket.ticketType.price}</TableCell>
+                                                                    <TableCell>{new Date(ticket.transaction.date).toLocaleDateString()}</TableCell>
+                                                                    <TableCell>{ticket.transaction.amount}</TableCell>
+                                                                    <TableCell>{ticket.verified ? 'Yes' : 'No'}</TableCell>
+                                                                    <TableCell>
+                                                                        <Button onClick={() => {
+                                                                            setSelectedTicket(ticket.id);
+                                                                            setOpen(true);
+                                                                        }}
+                                                                        sx={{ '&:focus': { outline: 'none' } }}
+                                                                        >
+                                                                            Show Code
+                                                                        </Button>
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            ))}
+                                                        </TableBody>
+                                                    </Table>
+                                                )}
                                             </Collapse>
                                         </TableCell>
                                     </TableRow>
+                                    <ThemeProvider theme={theme}>
+                                        <Dialog open={open} onClose={() => setOpen(false)}>
+                                            <DialogTitle>Ticket Code</DialogTitle>
+                                            <DialogContent>
+                                                {tickets.find(ticket => ticket.id === selectedTicket)?.code}
+                                            </DialogContent>
+                                        </Dialog>
+                                    </ThemeProvider>
                                 </React.Fragment>
                             );
                         })}

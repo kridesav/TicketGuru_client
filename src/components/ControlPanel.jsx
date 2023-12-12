@@ -244,7 +244,6 @@ export default function ControlPanel() {
                                                         <TableHead>
                                                             <TableRow>
                                                                 <TableCell>Description</TableCell>
-                                                                <TableCell>Price</TableCell>
                                                                 <TableCell>Date bought</TableCell>
                                                                 <TableCell>Price</TableCell>
                                                                 <TableCell>Checked</TableCell>
@@ -255,7 +254,6 @@ export default function ControlPanel() {
                                                             {tickets.map((ticket) => (
                                                                 <TableRow key={ticket.id}>
                                                                     <TableCell>{ticket.ticketType.description}</TableCell>
-                                                                    <TableCell>{ticket.ticketType.price}</TableCell>
                                                                     <TableCell>{new Date(ticket.transaction.date).toLocaleDateString()}</TableCell>
                                                                     <TableCell>{ticket.transaction.amount}</TableCell>
                                                                     <TableCell>{ticket.verified ? 'Yes' : 'No'}</TableCell>
